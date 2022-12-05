@@ -1,7 +1,9 @@
-const boom = require('@hapi/boom');
-
+const nodemailer = require('nodemailer');
 const { models } = require('./../libs/sequelize');
-const transporter = require('../config/mailer');
+const { google } = require('googleapis');
+const OAuth2 = google.auth.OAuth2;
+
+const accountTransport = require('../config/account_transport.json');
 
 class ContactService {
   constructor() {}
@@ -9,8 +11,37 @@ class ContactService {
   async create(data) {
     const newContact = await models.Contact.create(data);
 
+    const oAuth2Client = new OAuth2(
+      accountTransport.auth.clientId,
+      accountTransport.auth.clientSecret,
+      'https://developers.google.com/oauthplayground'
+    );
+
+    oAuth2Client.setCredentials({
+      refresh_token: accountTransport.auth.refreshToken,
+      tls: {
+        rejectUnauthorized: false,
+      },
+    });
+    const accesToken = await oAuth2Client.getAccessToken();
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        type: 'OAuth2',
+        user: 'info@codaltec.com',
+        clientId: accountTransport.auth.clientId,
+        clientSecret: accountTransport.auth.clientSecret,
+        refreshToken: accountTransport.auth.refreshToken,
+        accessToken: accesToken,
+      },
+    });
+
+    transporter.verify().then(() => {
+      console.log('Ready send emails');
+    });
+
     await transporter.sendMail({
-      from: '"Formulario de Contacto CODALTEC" <nforero@codaltec.com>', // sender address
+      from: '"Formulario de Contacto CODALTEC" <info@codaltec.com>', // sender address
       to: 'info@codaltec.com', // list of receivers
       subject:
         'Solicitud o petición desde el formulario de Contacto: ' + data.subject, // Subject line

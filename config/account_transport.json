@@ -1,0 +1,10 @@
+{
+  "service": "gmail",
+  "auth": {
+    "type": "OAuth2",
+    "user": "info@codaltec.com",
+    "clientId": "497466922299-gl3vu19r5usoq6jteel32a0h1c2vk9bs.apps.googleusercontent.com",
+    "clientSecret": "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",
+    "refreshToken": "1//04HDdr6mCoy1yCgYIARAAGAQSNwF-L9IrwO73sQd-4-f41F33XTsGTnVmn95XgtgBnAoM5hUZhZCcaIjbt_2GWKonc3AAzGPKFfc"
+  }
+}
