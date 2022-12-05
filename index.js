@@ -15,15 +15,15 @@ const port = process.env.PORT || 3000;
 
 app.use(express.json());
 
-const whitelist = [
-  'http://localhost:8080',
-  'https://myapp.co',
-  'http://localhost:3000',
-  'http://localhost:3001',
-  'http://localhost:3002',
-  'https://codaltec-backend.herokuapp.com/',
-  'https://zesty-pothos-492673.netlify.app/',
-];
+// const whitelist = [
+//   'http://localhost:8080',
+//   'https://myapp.co',
+//   'http://localhost:3000',
+//   'http://localhost:3001',
+//   'http://localhost:3002',
+//   'https://codaltec-backend.herokuapp.com/',
+//   'https://zesty-pothos-492673.netlify.app/',
+// ];
 const options = {
   origin: (origin, callback) => {
     callback(null, true);
