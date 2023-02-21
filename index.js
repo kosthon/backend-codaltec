@@ -11,8 +11,7 @@ const {
 } = require('./middlewares/error.handler');
 
 const app = express();
-const port = process.env.PORT || 3000;
-
+const port = 8085;
 app.use(express.json());
 
 // const whitelist = [
