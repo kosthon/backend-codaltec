@@ -10,6 +10,7 @@ const pqrRouter = require('./pqr.router');
 const financialRouter = require('./financial.router');
 const internalControlRouter = require('./internalControl.router');
 const contract = require('./contract.router');
+const authRouter = require('./auth.router');
 
 function routerApi(app) {
   const router = express.Router();
@@ -24,6 +25,7 @@ function routerApi(app) {
   router.use('/financial', financialRouter);
   router.use('/internal-control', internalControlRouter);
   router.use('/contract', contract);
+  router.use('/auth', authRouter);
 }
 
 module.exports = routerApi;

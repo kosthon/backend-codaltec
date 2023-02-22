@@ -1,4 +1,5 @@
 const express = require('express');
+const passport = require('passport');
 
 const FinancialService = require('../services/financial.service');
 const upload = require('../middlewares/multer');
@@ -8,6 +9,7 @@ const {
   updateFinancialSchema,
   getFinancialSchema,
 } = require('../schemas/financial.schema');
+const { checkRoles } = require('./../middlewares/auth.handler');
 
 const router = express.Router();
 const financial = new FinancialService();
@@ -35,21 +37,29 @@ router.get(
   }
 );
 
-router.post('/', upload(), async (req, res, next) => {
-  try {
-    const body = req.body;
-    const newCategory = await financial.create({
-      name: body.name,
-      file: req.file.filename,
-    });
-    res.status(201).json(newCategory);
-  } catch (error) {
-    next(error);
+router.post(
+  '/',
+  passport.authenticate('jwt', { session: false }),
+  checkRoles('admin'),
+  upload(),
+  async (req, res, next) => {
+    try {
+      const body = req.body;
+      const newCategory = await financial.create({
+        name: body.name,
+        file: req.file.filename,
+      });
+      res.status(201).json(newCategory);
+    } catch (error) {
+      next(error);
+    }
   }
-});
+);
 
 router.patch(
   '/:id',
+  passport.authenticate('jwt', { session: false }),
+  checkRoles('admin'),
   validatorHandler(getFinancialSchema, 'params'),
   validatorHandler(updateFinancialSchema, 'body'),
   upload(),
@@ -70,6 +80,8 @@ router.patch(
 
 router.delete(
   '/:id',
+  passport.authenticate('jwt', { session: false }),
+  checkRoles('admin'),
   validatorHandler(getFinancialSchema, 'params'),
   async (req, res, next) => {
     try {
